@@ -7,37 +7,31 @@ class BigInt {
 
 	public:
 		vector <char> data;
-		vector <char> result;
-		int size;
-
+		//vector <char> result;
+		
     BigInt(){
-
     	data.push_back('0');
-    	//data[0] = '0';
-
     }
 
 	BigInt(long long int input)
 	{
-		size = 0;
-		//cout << "long long"<<endl;
 		int carry,rem,n = input;
 		while(n){
 			data.push_back(n%10 + '0');
 			n = n/10;
-			size ++;
 		}
-		//data.push_back(input%10 + '0');		
-
 	}	
+
+   void operator=(long long v) {
+        data.clear();
+        for (; v > 0; v = v / 10)
+            data.push_back(v % 10 + '0');
+	}
 
 	BigInt(string num)
 	{
-		size = 0;
-		//cout << "Strung"<<endl;
 		int len = num.size();
 		for(int i=len-1;i>=0;i--){
-			size++;
 			data.push_back(num[i]);
 		}
 
@@ -45,9 +39,7 @@ class BigInt {
 	void printvalue(){
 		int len = data.size();
 		if(len == 0) cout << " " << 0 << " " ;
-		//cout<<len<<endl;
 		for(int i=len-1; i>=0; i--){
-			//cout << "hi";
 			cout<<" "<< data[i]<<" ";
 		}
 		cout<<endl;
@@ -58,67 +50,50 @@ class BigInt {
 	void addition(BigInt & obj);
 };
 
-void BigInt:: addition(BigInt & obj){
-
-	//addition(this,obj);
-
-	int l,i,j,sum=0,carry=0;
-	l = obj.size;
-	i=0;
-	while(l > 0){
-		sum = (obj.data[i] - '0') + (data[i] - '0') + carry;
-		carry =  sum/10;
-		sum = sum %10;
-		data.push_back(sum + '0');
-		l--;
-		i++;
-	}
-
-	if (carry){
-		data.push_back(carry + '0');
-	}
-
-}
-
-void BigInt::addition(BigInt & obj1 , BigInt & obj2){
-		//cout <<obj1.data[1]<<endl;
-		int l1 = obj1.size, l2= obj2.size;
+void BigInt:: addition(BigInt & obj){         
+         std::vector<char> data2;
+		int l1 = obj.data.size(), l2= data.size();
 		int sum,carry,i,j,k;
 		i = 0;
 		carry =0;
 		while(l1>0 && l2 >0 ){
-			sum = (obj1.data[i] - '0' )  + (obj2.data[i] - '0') + carry;
+			sum = (obj.data[i] - '0' )  + (data[i] - '0') + carry;
 			carry = sum /10;
 			sum = sum%10;
-			//cout<< "Debug: "<< sum  << " " << carry <<  obj1.data[i] << " " << obj2.data[i] << " " <<endl  ;
-
-			data.push_back(sum + '0');
-			//cout << "PushBack" << endl ;
+			data2.push_back(sum + '0');
 			l1--;
 			l2--;
 			i++;
 		}
 
 		while( l1 > 0 ){
-            sum = (obj1.data[i++] - '0') + carry;
+            sum = (obj.data[i++] - '0') + carry;
             carry = sum /10;
             sum = sum %10;
-            data.push_back(sum + '0');
+            data2.push_back(sum + '0');
             l1--;
 		}
 		while( l2 > 0 ){
-            sum = (obj2.data[i++] - '0') + carry;
+            sum = (data[i++] - '0') + carry;
             carry = sum /10;
             sum = sum %10;
-            data.push_back(sum + '0');
+            data2.push_back(sum + '0');
             l2--;
 		}
 		
 		if(carry){
-			data.push_back(carry + '0');
-			//cout << "PB" << endl;;
+			data2.push_back(carry + '0');
 		}
 
+		std::vector<char> temp=data;
+		data=data2;
+		temp.clear();	
+}
+
+
+void BigInt::addition(BigInt & obj1 , BigInt & obj2){
+		this->addition(obj1);
+		this->addition(obj2);
 }
 
 
@@ -138,6 +113,13 @@ int main()
 
 	int4.printvalue();
 	int4.addition(int1);
-	int4.printvalue();
+	int4.addition(int2);
+
+	int2 = 100;
+	BigInt int5;
+	int5.addition(int2, int3);
+
+	int5.printvalue();
+
 	return 0;
 }
