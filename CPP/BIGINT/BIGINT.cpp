@@ -48,6 +48,11 @@ class BigInt {
 	void addition(BigInt & obj1 , BigInt & obj2);
 
 	void addition(BigInt & obj);
+
+	void multiplication(BigInt & obj1 , BigInt & obj2);
+
+	void multiplication(BigInt & obj);
+
 };
 
 void BigInt:: addition(BigInt & obj){         
@@ -90,12 +95,62 @@ void BigInt:: addition(BigInt & obj){
 		temp.clear();	
 }
 
+void BigInt:: multiplication(BigInt & obj){         
+         std::vector<char> data2;
+		int l1 = obj.data.size(), l2= data.size();
+		int sum,carry,i,j,k;
+
+		if(l1 == 0 || l2 == 0){
+			std::vector<char> temp=obj.data;
+			data=obj.data;
+			temp.clear();
+			return;		
+		}
+
+		int in1 = 0,in2 = 0;
+
+		for( i = l2-1; i>= 0; i--){
+			
+			int carry = 0;
+			int x = data[i] - '0';
+			in2 = 0;
+			
+			for(j=l1-1; j>=0; j--){
+				int y = obj.data[j] - '0';
+
+				int sum = x*y + data2[in1+ in2]+ carry;
+
+				carry = sum /10;
+
+				data2[in1 + in2] = sum %10;
+
+				in2 ++;
+
+			}
+
+			if(carry){
+				data2[in1 + in2] = carry;
+			}
+
+			in1 ++;
+
+		}
+
+		std::vector<char> temp=data;
+		data=data2;
+		temp.clear();	
+}
+
 
 void BigInt::addition(BigInt & obj1 , BigInt & obj2){
 		this->addition(obj1);
 		this->addition(obj2);
 }
 
+void BigInt::multiplication(BigInt & obj1 , BigInt & obj2){
+		this->multiplication(obj1);
+		this->multiplication(obj2);
+}
 
 
 int main()
@@ -120,6 +175,11 @@ int main()
 	int5.addition(int2, int3);
 
 	int5.printvalue();
+
+	BigInt int6 = BigInt(50);
+	int3 = 2;
+	int6.multiplication(int3);
+	int6.printvalue();
 
 	return 0;
 }
